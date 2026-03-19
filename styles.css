@@ -6,24 +6,24 @@
 }
 
 :root {
-    --primary-color: #6366f1;
-    --primary-dark: #4f46e5;
-    --secondary-color: #8b5cf6;
-    --success-color: #22c55e;
-    --warning-color: #f59e0b;
-    --danger-color: #ef4444;
-    --bg-color: #f8fafc;
-    --card-bg: #ffffff;
-    --text-primary: #1e293b;
-    --text-secondary: #64748b;
-    --border-color: #e2e8f0;
-    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --primary-color: #a67c52;
+    --primary-dark: #8b5c33;
+    --secondary-color: #c8a98a;
+    --success-color: #7a8b6f;
+    --warning-color: #d4a76a;
+    --danger-color: #b97c6b;
+    --bg-color: #f7f3e9;
+    --card-bg: #f0ead6;
+    --text-primary: #5c4b37;
+    --text-secondary: #8b7355;
+    --border-color: #d9ceb2;
+    --shadow: 0 4px 6px -1px rgba(92, 75, 55, 0.1), 0 2px 4px -1px rgba(92, 75, 55, 0.06);
+    --shadow-lg: 0 20px 25px -5px rgba(92, 75, 55, 0.1), 0 10px 10px -5px rgba(92, 75, 55, 0.04);
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'SimSun', 'MS Mincho', serif;
+    background: linear-gradient(135deg, #f7f3e9 0%, #f0ead6 100%);
     min-height: 100vh;
     color: var(--text-primary);
 }
@@ -38,52 +38,54 @@ body {
 header {
     text-align: center;
     padding: 30px 0;
-    color: white;
+    color: var(--text-primary);
 }
 
 header h1 {
     font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    color: var(--text-primary);
 }
 
 .subtitle {
     font-size: 1.1rem;
     opacity: 0.9;
+    color: var(--text-secondary);
 }
 
 /* 导航标签 */
 .nav-tabs {
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
     margin-bottom: 30px;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(92, 75, 55, 0.1);
     padding: 8px;
     border-radius: 12px;
-    backdrop-filter: blur(10px);
+    border: 1px solid rgba(92, 75, 55, 0.2);
 }
 
 .tab-btn {
     padding: 12px 24px;
     border: none;
     background: transparent;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-secondary);
     font-size: 1rem;
     cursor: pointer;
     border-radius: 8px;
     transition: all 0.3s ease;
+    text-align: center;
 }
 
 .tab-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
+    background: rgba(92, 75, 55, 0.1);
+    color: var(--text-primary);
 }
 
 .tab-btn.active {
-    background: white;
-    color: var(--primary-color);
+    background: var(--primary-color);
+    color: white;
     font-weight: 600;
 }
 
@@ -94,6 +96,7 @@ header h1 {
     border-radius: 20px;
     padding: 30px;
     box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(92, 75, 55, 0.2);
     animation: fadeIn 0.3s ease;
 }
 
@@ -215,13 +218,15 @@ select:focus {
 }
 
 .flip-card-front {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: linear-gradient(135deg, #e6ded1 0%, #d9ceb2 100%);
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><rect width="200" height="200" fill="%23d9ceb2"/><path d="M0 0 L200 0 L200 200 L0 200 Z" fill="none" stroke="%23c8b898" stroke-width="1" opacity="0.4"/><path d="M0 40 L200 40" fill="none" stroke="%23c8b898" stroke-width="0.5" opacity="0.3"/><path d="M0 80 L200 80" fill="none" stroke="%23c8b898" stroke-width="0.5" opacity="0.3"/><path d="M0 120 L200 120" fill="none" stroke="%23c8b898" stroke-width="0.5" opacity="0.3"/><path d="M0 160 L200 160" fill="none" stroke="%23c8b898" stroke-width="0.5" opacity="0.3"/><path d="M40 0 L40 200" fill="none" stroke="%23c8b898" stroke-width="0.3" opacity="0.2"/><path d="M80 0 L80 200" fill="none" stroke="%23c8b898" stroke-width="0.3" opacity="0.2"/><path d="M120 0 L120 200" fill="none" stroke="%23c8b898" stroke-width="0.3" opacity="0.2"/><path d="M160 0 L160 200" fill="none" stroke="%23c8b898" stroke-width="0.3" opacity="0.2"/></svg>');
+    color: #5c4b37;
 }
 
 .flip-card-back {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    color: white;
+    background: linear-gradient(135deg, #f0ead6 0%, #e6ded1 100%);
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><rect width="200" height="200" fill="%23e6ded1"/><path d="M0 0 L200 0 L200 200 L0 200 Z" fill="none" stroke="%23d9ceb2" stroke-width="1" opacity="0.4"/><path d="M0 40 L200 40" fill="none" stroke="%23d9ceb2" stroke-width="0.5" opacity="0.3"/><path d="M0 80 L200 80" fill="none" stroke="%23d9ceb2" stroke-width="0.5" opacity="0.3"/><path d="M0 120 L200 120" fill="none" stroke="%23d9ceb2" stroke-width="0.5" opacity="0.3"/><path d="M0 160 L200 160" fill="none" stroke="%23d9ceb2" stroke-width="0.5" opacity="0.3"/><path d="M40 0 L40 200" fill="none" stroke="%23d9ceb2" stroke-width="0.3" opacity="0.2"/><path d="M80 0 L80 200" fill="none" stroke="%23d9ceb2" stroke-width="0.3" opacity="0.2"/><path d="M120 0 L120 200" fill="none" stroke="%23d9ceb2" stroke-width="0.3" opacity="0.2"/><path d="M160 0 L160 200" fill="none" stroke="%23d9ceb2" stroke-width="0.3" opacity="0.2"/></svg>');
+    color: #5c4b37;
     transform: rotateY(180deg);
 }
 
@@ -235,26 +240,29 @@ select:focus {
 .card-category {
     font-size: 0.9rem;
     padding: 6px 16px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(92, 75, 55, 0.1);
+    border: 1px solid rgba(92, 75, 55, 0.2);
     border-radius: 20px;
-    backdrop-filter: blur(10px);
+    color: #5c4b37;
 }
 
 .card-front-text {
     font-size: 2.5rem;
     font-weight: 700;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    color: #5c4b37;
 }
 
 .card-back-text {
     font-size: 2rem;
     font-weight: 600;
+    color: #5c4b37;
 }
 
 .card-hint {
     font-size: 0.9rem;
     opacity: 0.8;
     margin-top: 20px;
+    color: #5c4b37;
 }
 
 .card-example {
@@ -262,8 +270,10 @@ select:focus {
     opacity: 0.9;
     font-style: italic;
     padding: 10px 20px;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(92, 75, 55, 0.05);
+    border: 1px solid rgba(92, 75, 55, 0.1);
     border-radius: 10px;
+    color: #5c4b37;
 }
 
 .difficulty-buttons {
@@ -304,10 +314,9 @@ select:focus {
 
 /* 卡片导航 */
 .card-navigation {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
     margin-top: 30px;
 }
 
@@ -731,7 +740,7 @@ code {
     }
 
     .nav-tabs {
-        flex-wrap: wrap;
+        grid-template-columns: 1fr 1fr;
     }
 
     .tab-btn {
@@ -758,20 +767,97 @@ code {
 
     .filter-controls {
         justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .filter-controls select,
+    .filter-controls button {
+        flex: 1;
+        min-width: 120px;
+        padding: 8px 12px;
+        font-size: 0.9rem;
     }
 
     .card-navigation {
-        flex-wrap: wrap;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 10px;
+    }
+
+    .nav-btn,
+    .flip-action-btn {
+        padding: 10px 12px;
+        font-size: 0.85rem;
     }
 
     .difficulty-buttons {
         flex-wrap: wrap;
         justify-content: center;
+        gap: 10px;
+    }
+
+    .diff-btn {
+        flex: 1;
+        min-width: 80px;
+        padding: 8px 12px;
+        font-size: 0.9rem;
     }
 
     .stats-actions {
         flex-direction: column;
+        gap: 10px;
     }
+
+    .stats-actions button {
+        width: 100%;
+    }
+
+    /* 卡片管理页面响应式 */
+    .cards-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-box {
+        min-width: 100%;
+    }
+
+    .card-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .card-item-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .btn-edit,
+    .btn-delete {
+        flex: 1;
+        text-align: center;
+    }
+}
+
+/* 统一按钮样式 */
+.btn-secondary,
+.btn-danger {
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    border-radius: 8px;
+}
+
+/* 卡片管理页面按钮样式 */
+.cards-controls button {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+/* 搜索框按钮样式 */
+.search-box button {
+    padding: 10px 16px;
+    font-size: 0.9rem;
 }
 
 /* 滚动条样式 */

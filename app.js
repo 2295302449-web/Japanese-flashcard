@@ -17,14 +17,16 @@ class JapaneseFlashcards {
     }
 
     init() {
+        // 清除旧的本地存储数据，使用新的示例卡片
+        localStorage.removeItem('japaneseFlashcards');
+        localStorage.removeItem('japaneseFlashcardsStats');
+        
+        // 强制添加新的示例卡片
+        this.addSampleCards();
+        
         this.loadData();
         this.bindEvents();
         this.updateUI();
-        
-        // 如果没有卡片，添加一些示例卡片
-        if (this.cards.length === 0) {
-            this.addSampleCards();
-        }
     }
 
     // 绑定事件
