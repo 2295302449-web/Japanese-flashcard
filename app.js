@@ -515,16 +515,24 @@ class JapaneseFlashcards {
     // 添加示例卡片
     addSampleCards() {
         const sampleCards = [
-            { front: 'こんにちは', back: '你好', category: '问候语', example: 'こんにちは、元気ですか。' },
-            { front: 'ありがとう', back: '谢谢', category: '礼貌用语', example: 'ありがとうございます。' },
-            { front: 'さようなら', back: '再见', category: '问候语', example: 'さようなら、また明日。' },
-            { front: 'おはよう', back: '早上好', category: '问候语', example: 'おはようございます。' },
-            { front: 'すみません', back: '对不起/不好意思', category: '礼貌用语', example: 'すみません、道を教えてください。' },
-            { front: '水', back: '水', category: '名词', example: '水を一杯ください。' },
-            { front: '食べる', back: '吃', category: '动词', example: '寿司を食べる。' },
-            { front: '行く', back: '去', category: '动词', example: '学校に行く。' },
-            { front: '好き', back: '喜欢', category: '形容词', example: '日本料理が好きです。' },
-            { front: '大きい', back: '大的', category: '形容词', example: '大きい家。' }
+            { front: '集中豪雨', back: '特大暴雨', category: '气象', example: '最近集中豪雨が多いです。' },
+            { front: 'あくびをする', back: '打哈欠', category: '动作', example: '朝はあくびをしながら起きます。' },
+            { front: '口は災いの元', back: '祸从口出', category: '谚语', example: '口は災いの元と言われています。' },
+            { front: 'ノービザ政策', back: '免签', category: '政策', example: '日本へのノービザ政策が始まりました。' },
+            { front: 'フェミニスト', back: '女权主义者', category: '社会', example: '彼女はフェミニストです。' },
+            { front: '高所得層', back: '高收入人群', category: '社会', example: '高所得層は税金を多く払います。' },
+            { front: '高級品', back: '名牌商品', category: '物品', example: '高級品は高いです。' },
+            { front: 'きりがない', back: '没完没了', category: '形容词', example: '作業がきりがないです。' },
+            { front: 'デジタル通貨', back: '数字货币', category: '金融', example: 'ビットコインはデジタル通貨の一種です。' },
+            { front: '世界的・グローバル的', back: '全球的', category: '形容词', example: 'これは世界的な問題です。' },
+            { front: '即辞職', back: '闪辞', category: '职场', example: '彼は即辞職しました。' },
+            { front: '親子旅行', back: '亲子游', category: '生活', example: '夏休みに親子旅行に行きます。' },
+            { front: '電気バイク', back: '电动车', category: '交通', example: '電気バイクは環境に優しいです。' },
+            { front: 'フリーランス', back: '自由职业者', category: '职场', example: '彼はフリーランスとして働いています。' },
+            { front: '訳アリ品', back: '瑕疵品', category: '物品', example: 'これは訳アリ品です。' },
+            { front: '小町', back: '常指代美人，可意译为西施', category: '文化', example: '彼女は小町のような美人です。' },
+            { front: '棚から牡丹餅', back: '天上掉馅饼', category: '谚语', example: 'そんな幸せは棚から牡丹餅です。' },
+            { front: 'でっち上げ', back: '捏造', category: '行为', example: '彼はでっち上げた話をしました。' }
         ];
         
         this.cards = sampleCards;
