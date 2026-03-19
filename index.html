@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日语记忆卡片</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>日语记忆卡片</h1>
+            <p class="subtitle">翻转卡片，巩固记忆</p>
+        </header>
+
+        <nav class="nav-tabs">
+            <button class="tab-btn active" data-tab="study">学习模式</button>
+            <button class="tab-btn" data-tab="import">导入资料</button>
+            <button class="tab-btn" data-tab="cards">卡片管理</button>
+            <button class="tab-btn" data-tab="stats">学习统计</button>
+        </nav>
+
+        <!-- 学习模式 -->
+        <section id="study-section" class="tab-content active">
+            <div class="study-controls">
+                <div class="progress-info">
+                    <span id="progress-text">第 1 / 10 张</span>
+                    <div class="progress-bar">
+                        <div id="progress-fill" class="progress-fill"></div>
+                    </div>
+                </div>
+                <div class="filter-controls">
+                    <select id="category-filter">
+                        <option value="all">全部类别</option>
+                    </select>
+                    <button id="shuffle-btn" class="btn-secondary">随机排序</button>
+                </div>
+            </div>
+
+            <div class="card-container">
+                <div class="flip-card" id="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="card-content">
+                                <span class="card-category" id="card-category">单词</span>
+                                <h2 class="card-front-text" id="card-front">こんにちは</h2>
+                                <p class="card-hint">点击翻转查看答案</p>
+                            </div>
+                        </div>
+                        <div class="flip-card-back">
+                            <div class="card-content">
+                                <span class="card-category" id="card-category-back">单词</span>
+                                <h2 class="card-back-text" id="card-back">你好</h2>
+                                <p class="card-example" id="card-example">例句：こんにちは、元気ですか。</p>
+                                <div class="difficulty-buttons">
+                                    <button class="diff-btn hard" data-difficulty="hard">困难</button>
+                                    <button class="diff-btn medium" data-difficulty="medium">一般</button>
+                                    <button class="diff-btn easy" data-difficulty="easy">简单</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-navigation">
+                <button id="prev-btn" class="nav-btn">← 上一张</button>
+                <button id="flip-btn" class="flip-action-btn">翻转卡片</button>
+                <button id="next-btn" class="nav-btn">下一张 →</button>
+            </div>
+        </section>
+
+        <!-- 导入资料 -->
+        <section id="import-section" class="tab-content">
+            <div class="import-container">
+                <h2>导入学习资料</h2>
+                <p class="import-desc">支持导入 JSON 或 CSV 格式的学习资料</p>
+                
+                <div class="import-tabs">
+                    <button class="import-tab-btn active" data-import="file">文件导入</button>
+                    <button class="import-tab-btn" data-import="manual">手动输入</button>
+                </div>
+
+                <!-- 文件导入 -->
+                <div id="file-import" class="import-content active">
+                    <div class="file-upload-area" id="drop-zone">
+                        <div class="upload-icon">📁</div>
+                        <p>拖拽文件到此处，或点击选择文件</p>
+                        <input type="file" id="file-input" accept=".json,.csv" hidden>
+                        <button class="btn-primary" onclick="document.getElementById('file-input').click()">选择文件</button>
+                    </div>
+                    <div class="file-format-help">
+                        <h3>文件格式说明</h3>
+                        <div class="format-tabs">
+                            <button class="format-tab active" data-format="json">JSON 格式</button>
+                            <button class="format-tab" data-format="csv">CSV 格式</button>
+                        </div>
+                        <div id="json-format" class="format-content active">
+                            <pre><code>[
+  {
+    "front": "こんにちは",
+    "back": "你好",
+    "category": "问候语",
+    "example": "こんにちは、元気ですか。"
+  },
+  {
+    "front": "ありがとう",
+    "back": "谢谢",
+    "category": "礼貌用语",
+    "example": "ありがとうございます。"
+  }
+]</code></pre>
+                        </div>
+                        <div id="csv-format" class="format-content">
+                            <pre><code>front,back,category,example
+こんにちは,你好,问候语,こんにちは、元気ですか。
+ありがとう,谢谢,礼貌用语,ありがとうございます。</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 手动输入 -->
+                <div id="manual-import" class="import-content">
+                    <div class="manual-input-form">
+                        <div class="form-group">
+                            <label>正面内容（日语）</label>
+                            <input type="text" id="manual-front" placeholder="例如：こんにちは">
+                        </div>
+                        <div class="form-group">
+                            <label>背面内容（中文）</label>
+                            <input type="text" id="manual-back" placeholder="例如：你好">
+                        </div>
+                        <div class="form-group">
+                            <label>类别</label>
+                            <input type="text" id="manual-category" placeholder="例如：问候语">
+                        </div>
+                        <div class="form-group">
+                            <label>例句（可选）</label>
+                            <input type="text" id="manual-example" placeholder="例如：こんにちは、元気ですか。">
+                        </div>
+                        <button id="add-card-btn" class="btn-primary">添加卡片</button>
+                    </div>
+                    <div class="manual-list">
+                        <h3>待添加的卡片</h3>
+                        <div id="pending-cards" class="pending-cards-list"></div>
+                        <button id="save-manual-btn" class="btn-success">保存所有卡片</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 卡片管理 -->
+        <section id="cards-section" class="tab-content">
+            <div class="cards-container">
+                <h2>卡片管理</h2>
+                <div class="cards-controls">
+                    <div class="search-box">
+                        <input type="text" id="card-search" placeholder="搜索卡片...">
+                        <button id="search-btn" class="btn-secondary">搜索</button>
+                    </div>
+                    <div class="filter-controls">
+                        <select id="card-category-filter">
+                            <option value="all">全部类别</option>
+                        </select>
+                        <button id="refresh-cards-btn" class="btn-secondary">刷新</button>
+                        <button id="select-all-btn" class="btn-secondary">全选</button>
+                        <button id="batch-delete-btn" class="btn-danger" disabled>批量删除</button>
+                    </div>
+                </div>
+
+                <div id="cards-list" class="cards-list">
+                    <!-- 卡片列表将通过JS动态生成 -->
+                </div>
+
+                <div id="cards-pagination" class="cards-pagination">
+                    <!-- 分页控制将通过JS动态生成 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 学习统计 -->
+        <section id="stats-section" class="tab-content">
+            <div class="stats-container">
+                <h2>学习统计</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📚</div>
+                        <div class="stat-value" id="total-cards">0</div>
+                        <div class="stat-label">总卡片数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-value" id="mastered-cards">0</div>
+                        <div class="stat-label">已掌握</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📖</div>
+                        <div class="stat-value" id="studied-cards">0</div>
+                        <div class="stat-label">已学习</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-value" id="accuracy-rate">0%</div>
+                        <div class="stat-label">正确率</div>
+                    </div>
+                </div>
+
+                <div class="category-stats">
+                    <h3>类别统计</h3>
+                    <div id="category-list" class="category-list"></div>
+                </div>
+
+                <div class="study-history">
+                    <h3>学习记录</h3>
+                    <div id="history-list" class="history-list"></div>
+                </div>
+
+                <div class="stats-actions">
+                    <button id="reset-stats-btn" class="btn-danger">重置统计数据</button>
+                    <button id="export-data-btn" class="btn-secondary">导出数据</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
