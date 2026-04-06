@@ -17,14 +17,14 @@ class JapaneseFlashcards {
     }
 
     init() {
-        // 清除旧的本地存储数据，使用新的示例卡片
-        localStorage.removeItem('japaneseFlashcards');
-        localStorage.removeItem('japaneseFlashcardsStats');
-        
-        // 强制添加新的示例卡片
-        this.addSampleCards();
-        
+        // 先加载数据
         this.loadData();
+        
+        // 只有在本地存储中没有数据时才添加示例卡片
+        if (this.cards.length === 0) {
+            this.addSampleCards();
+        }
+        
         this.bindEvents();
         this.updateUI();
     }
@@ -75,6 +75,11 @@ class JapaneseFlashcards {
         // 类别筛选
         document.getElementById('category-filter').addEventListener('change', (e) => {
             this.filterByCategory(e.target.value);
+        });
+
+        // 复习模式选择
+        document.getElementById('review-mode').addEventListener('change', (e) => {
+            this.filterByReviewMode(e.target.value);
         });
 
         // 导入标签切换
@@ -214,6 +219,9 @@ class JapaneseFlashcards {
             card.mastered = true;
         }
         
+        // 更新复习时间和记忆强度
+        this.updateReviewSchedule(card, difficulty);
+        
         // 添加历史记录
         this.stats.history.unshift({
             date: new Date().toISOString(),
@@ -232,6 +240,42 @@ class JapaneseFlashcards {
         }, 500);
     }
 
+    // 更新复习计划（基于艾宾浩斯记忆曲线）
+    updateReviewSchedule(card, difficulty) {
+        // 艾宾浩斯记忆曲线时间间隔（分钟）
+        // 10分钟、1天、两天、4天、7天、15天、1个月、3个月、6个月、一年
+        const intervals = [10, 1440, 2880, 5760, 10080, 21600, 43200, 129600, 259200, 525600]; 
+        
+        // 初始化卡片的复习数据
+        if (!card.reviewData) {
+            card.reviewData = {
+                lastReviewed: new Date().toISOString(),
+                nextReview: null,
+                reviewCount: 0,
+                memoryStrength: 0
+            };
+        }
+        
+        // 更新复习次数和记忆强度
+        card.reviewData.reviewCount++;
+        card.reviewData.lastReviewed = new Date().toISOString();
+        
+        // 根据难度调整记忆强度
+        if (difficulty === 'easy') {
+            card.reviewData.memoryStrength = Math.min(card.reviewData.memoryStrength + 2, intervals.length - 1);
+        } else if (difficulty === 'medium') {
+            card.reviewData.memoryStrength = Math.max(0, Math.min(card.reviewData.memoryStrength + 1, intervals.length - 1));
+        } else {
+            card.reviewData.memoryStrength = Math.max(0, card.reviewData.memoryStrength - 1);
+        }
+        
+        // 计算下次复习时间
+        const nextInterval = intervals[card.reviewData.memoryStrength];
+        const nextReviewDate = new Date();
+        nextReviewDate.setMinutes(nextReviewDate.getMinutes() + nextInterval);
+        card.reviewData.nextReview = nextReviewDate.toISOString();
+    }
+
     // 随机排序
     shuffleCards() {
         for (let i = this.cards.length - 1; i > 0; i--) {
@@ -245,16 +289,62 @@ class JapaneseFlashcards {
 
     // 按类别筛选
     filterByCategory(category) {
-        if (category === 'all') {
-            this.currentIndex = 0;
-        } else {
-            const index = this.cards.findIndex(card => card.category === category);
-            if (index !== -1) {
-                this.currentIndex = index;
-            }
+        this.loadData(); // 重新加载所有卡片
+        
+        // 先应用复习模式过滤
+        const reviewMode = document.getElementById('review-mode').value;
+        this.filterCardsByReviewMode(reviewMode);
+        
+        // 再应用类别过滤
+        if (category !== 'all') {
+            this.cards = this.cards.filter(card => card.category === category);
         }
+        
+        this.currentIndex = 0;
         this.resetCard();
         this.updateCard();
+    }
+
+    // 按复习模式筛选
+    filterByReviewMode(mode) {
+        this.loadData(); // 重新加载所有卡片
+        
+        this.filterCardsByReviewMode(mode);
+        
+        // 再应用类别过滤
+        const category = document.getElementById('category-filter').value;
+        if (category !== 'all') {
+            this.cards = this.cards.filter(card => card.category === category);
+        }
+        
+        this.currentIndex = 0;
+        this.resetCard();
+        this.updateCard();
+    }
+
+    // 根据复习模式过滤卡片
+    filterCardsByReviewMode(mode) {
+        const now = new Date();
+        
+        switch (mode) {
+            case 'review':
+                // 显示需要复习的卡片（下次复习时间已到或未设置）
+                this.cards = this.cards.filter(card => {
+                    if (!card.reviewData || !card.reviewData.nextReview) {
+                        return true; // 未学习过的卡片
+                    }
+                    return new Date(card.reviewData.nextReview) <= now;
+                });
+                break;
+            case 'new':
+                // 显示未学习过的卡片
+                this.cards = this.cards.filter(card => !card.reviewData);
+                break;
+            case 'all':
+            default:
+                // 显示所有卡片
+                break;
+        }
     }
 
     // 处理文件上传
@@ -589,22 +679,84 @@ class JapaneseFlashcards {
         if (filteredCards.length === 0) {
             cardsList.innerHTML = '<div class="empty-state">没有找到卡片</div>';
         } else {
-            cardsList.innerHTML = filteredCards.map((card, index) => `
-                <div class="card-item">
-                    <div class="card-item-checkbox">
-                        <input type="checkbox" class="card-checkbox" data-index="${index}">
+            // 计算相对时间的函数
+            function getRelativeTime(date) {
+                if (!date) return '未设置';
+                
+                const now = new Date();
+                const diffMs = date - now;
+                
+                if (diffMs <= 0) return '现在';
+                
+                const diffMins = Math.floor(diffMs / 60000);
+                const diffHours = Math.floor(diffMs / 3600000);
+                const diffDays = Math.floor(diffMs / 86400000);
+                const diffMonths = Math.floor(diffDays / 30);
+                const diffYears = Math.floor(diffDays / 365);
+                
+                if (diffMins < 60) {
+                    return `${diffMins}分钟后`;
+                } else if (diffHours < 24) {
+                    return `${diffHours}小时后`;
+                } else if (diffDays < 30) {
+                    return `${diffDays}天后`;
+                } else if (diffMonths < 12) {
+                    return `${diffMonths}个月后`;
+                } else {
+                    return `${diffYears}年后`;
+                }
+            }
+            
+            cardsList.innerHTML = filteredCards.map((card, index) => {
+                // 格式化复习时间
+                let reviewInfo = '';
+                if (card.reviewData) {
+                    const nextReview = card.reviewData.nextReview ? new Date(card.reviewData.nextReview) : null;
+                    const now = new Date();
+                    const isDue = nextReview && nextReview <= now;
+                    const relativeTime = getRelativeTime(nextReview);
+                    
+                    reviewInfo = `
+                        <div class="card-item-review">
+                            <div class="review-status ${isDue ? 'due' : ''}">
+                                ${isDue ? '需要复习' : '复习中'}
+                            </div>
+                            <div class="review-time">
+                                下次复习: ${relativeTime}
+                            </div>
+                            <div class="review-count">
+                                复习次数: ${card.reviewData.reviewCount || 0}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    reviewInfo = `
+                        <div class="card-item-review">
+                            <div class="review-status new">
+                                未学习
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                return `
+                    <div class="card-item">
+                        <div class="card-item-checkbox">
+                            <input type="checkbox" class="card-checkbox" data-index="${index}">
+                        </div>
+                        <div class="card-item-content">
+                            <div class="card-item-front">${card.front}</div>
+                            <div class="card-item-back">${card.back}</div>
+                            ${card.category ? `<div class="card-item-category">${card.category}</div>` : ''}
+                            ${reviewInfo}
+                        </div>
+                        <div class="card-item-actions">
+                            <button class="btn-edit" onclick="app.editCard(${index})">编辑</button>
+                            <button class="btn-delete" onclick="app.deleteCard(${index})">删除</button>
+                        </div>
                     </div>
-                    <div class="card-item-content">
-                        <div class="card-item-front">${card.front}</div>
-                        <div class="card-item-back">${card.back}</div>
-                        ${card.category ? `<div class="card-item-category">${card.category}</div>` : ''}
-                    </div>
-                    <div class="card-item-actions">
-                        <button class="btn-edit" onclick="app.editCard(${index})">编辑</button>
-                        <button class="btn-delete" onclick="app.deleteCard(${index})">删除</button>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
             
             // 添加复选框事件监听
             this.bindCardCheckboxes();
@@ -706,6 +858,18 @@ class JapaneseFlashcards {
 
     // 更新UI
     updateUI() {
+        // 应用复习模式过滤
+        const reviewMode = document.getElementById('review-mode')?.value || 'all';
+        const category = document.getElementById('category-filter')?.value || 'all';
+        
+        this.loadData();
+        this.filterCardsByReviewMode(reviewMode);
+        
+        if (category !== 'all') {
+            this.cards = this.cards.filter(card => card.category === category);
+        }
+        
+        this.currentIndex = 0;
         this.updateCard();
     }
 }
